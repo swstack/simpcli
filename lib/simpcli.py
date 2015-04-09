@@ -99,7 +99,6 @@ class _SimpleCli(object):
                 if value is not None:
                     opt_args[optional['name']] = value
 
-
         cli_args.sub_handler(*pos_args, **opt_args)
 
     def add_root_argument(self, *args, **kwargs):
