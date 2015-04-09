@@ -1,15 +1,19 @@
-"""Yet another wrapper around command line interfaces
-
-This started as a fun/toy project and actually ended up to be very much
-like what fabric offers.  Anyway, I kind of enjoy the decorator syntax.
-
-"""
-
-# TODO: Simple code usage example
 # TODO: Add flag-type argument decorator (e.g. action=store_true)
 # TODO: Implement argument types
 
 import argparse
+import sys
+import inspect
+
+
+def _print_command_list(commands):
+    """Print formatted list of available commands"""
+
+    indented_commands = ""
+    for cmd, info  in commands.items():
+        indented_commands += "    {} - {}\n".format(cmd, info['args'])
+    message = "Choose from commands: \n{}".format(indented_commands)
+    print(message)
 
 
 class _SimpleCli(object):
@@ -26,10 +30,14 @@ class _SimpleCli(object):
         self._command_parsers = self._root_parser.add_subparsers(help="Commands")
         self._commands = {}
 
-    def add_command(self, name, description, handler):
+    def add_command(self, name, args, description, handler):
         """Extend ``SimpleCli`` with a command"""
 
+        if self._commands.get(name, None) is not None:
+            raise Exception("Command {} already registered".format(name))
+
         self._commands[name] = {
+            "args": args,
             "description": description,
             "handler": handler,
             "positionals": [],
@@ -47,7 +55,6 @@ class _SimpleCli(object):
 
     def add_optional_argument(self, command_name, name, description):
         """Add an argument to an existing command"""
-
 
         cmd = self._commands.get(command_name, None)
         if cmd:
@@ -82,10 +89,13 @@ class _SimpleCli(object):
         command specified should match a ``command`` user-decorated function.
         """
 
+        if len(sys.argv) == 1:
+            _print_command_list(self._commands)
+            return 1
+
         cli_args = self._root_parser.parse_args()
         cmd = self._commands.get(cli_args.sub_handler.__name__, None)
         if cmd:
-
             # Build positional arguments
             pos_args = []
             for position, positional in enumerate(cmd['positionals']):
@@ -98,7 +108,6 @@ class _SimpleCli(object):
                 value = getattr(cli_args, optional['name'])
                 if value is not None:
                     opt_args[optional['name']] = value
-
 
         cli_args.sub_handler(*pos_args, **opt_args)
 
@@ -116,6 +125,7 @@ class command(object):
 
     def __call__(self, handler):
         simpcli.add_command(handler.__name__,
+                            inspect.getargspec(handler)[0],
                             self._description,
                             handler)
         return handler
