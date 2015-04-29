@@ -1,4 +1,4 @@
-from lib.simpcli import simpcli, command, optional_argument, positional_argument
+from simpcli.simpcli import simpcli, command, optional_argument, positional_argument
 import unittest
 import mock
 import sys

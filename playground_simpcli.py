@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from lib.simpcli import simpcli, command, optional_argument, positional_argument
+from simpcli.simpcli import simpcli, command, optional_argument, positional_argument
 
 
 @optional_argument("opt", description="Optional argument")
