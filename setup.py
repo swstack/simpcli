@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name="simpcli",
@@ -6,7 +6,7 @@ setup(
     url="https://github.com/swstack/simpcli",
     author="Stack, Stephen",
     author_email="ss@stephenstack.com",
-    packages=find_packages(),
+    packages=['lib'],
     version='dev',
     license='mit',
 )
