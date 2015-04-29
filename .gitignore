@@ -2,3 +2,6 @@ env/
 env3/
 .idea/
 *.pyc
+build/
+dist/
+simpcli.egg-info
