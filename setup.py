@@ -7,5 +7,6 @@ setup(
     author="Stack, Stephen",
     author_email="ss@stephenstack.com",
     packages=find_packages(),
-    version='dev'
+    version='dev',
+    license='mit',
 )
